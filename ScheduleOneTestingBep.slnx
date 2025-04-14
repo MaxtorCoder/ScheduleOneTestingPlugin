@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="LocalMultiplayer\LocalMultiplayer.csproj" Type="Classic C#" />
+  <Project Path="ScheduleOneTestingBep.Scripts\ScheduleOneTestingBep.Scripts.csproj" Type="Classic C#" />
+  <Project Path="ScheduleOneTestingBep/ScheduleOneTestingBep.csproj" />
+</Solution>
