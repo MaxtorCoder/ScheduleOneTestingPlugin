@@ -15,6 +15,6 @@ public class RegistryPatches
     public static void Awake_Prefix(Registry __instance)
     {
         AssetManager.LoadAssetBundle("custom_asset_bundle");
-        AssetManager.Register(InstanceFinder.NetworkManager, AssetManager.LoadedAssetBundle);
+        AssetManager.Register(InstanceFinder.NetworkManager);
     }
 }

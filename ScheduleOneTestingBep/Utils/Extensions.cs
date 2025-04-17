@@ -32,4 +32,14 @@ public static class Extensions
 
         return pascalCased;
     }
+
+    public static string CapitalizeEachWord(this string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return input;
+
+        input = char.ToUpper(input[0]) + input[1..];
+        input = Regex.Replace(input, @"(?<=\s)[a-z]", m => m.Value.ToUpper());
+        return input;
+    }
 }

@@ -1,21 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>LocalMultiplayer</AssemblyName>
     <Product>Local Multiplayer</Product>
+    <RootNamespace>LocalMultiplayer</RootNamespace>
     <Version>1.0.0</Version>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;
       https://nuget.bepinex.dev/v3/index.json;
       https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
-    <RootNamespace>LocalMultiplayer</RootNamespace>
   </PropertyGroup>
-
-  <Import Project="$(SolutionDir)DevVars.targets" />
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
@@ -53,9 +48,9 @@
     <CopyToPluginFolder Include="$(TargetDir)\LocalMultiplayer.dll" />
   </ItemGroup>
 
-  <Target Name="CopyToPluginFolder" AfterTargets="PostBuildEvent" Condition="'$(CI)' == ''" Outputs="%(PluginFolder.Identity)">
+  <Target Name="CopyToPluginFolder" AfterTargets="PostBuildEvent" Condition="'$(CI)' == ''" Outputs="$(PluginFolder)">
     <PropertyGroup>
-      <Destination>%(PluginFolder.Identity)</Destination>
+      <Destination>$(PluginFolder)</Destination>
     </PropertyGroup>
     <Message Importance="high" Text="Copying files to plugin folder: $(Destination)" />
     <Copy SourceFiles="@(CopyToPluginFolder)" DestinationFiles="@(CopyToPluginFolder->'$(Destination)\LocalMultiplayer\%(RecursiveDir)%(Filename)%(Extension)')" />

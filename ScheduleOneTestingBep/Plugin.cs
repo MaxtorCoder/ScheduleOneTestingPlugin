@@ -28,7 +28,9 @@ public class Plugin : BaseUnityPlugin
         new Harmony($"com.maxtorcoder.{MyPluginInfo.PLUGIN_NAME}")
             .PatchAll();
 
-        StartCoroutine(InitializeData());
+        Player.onPlayerSpawned += _ => TerrainManager.Initialize();
+
+        // StartCoroutine(InitializeData());
     }
 
     IEnumerator InitializeData()
@@ -39,7 +41,5 @@ public class Plugin : BaseUnityPlugin
         RegistryManager.RetrieveDataFromRegistry(Registry.Instance);
         RegistryManager.RegisterItem<ToiletCustom>("toilet", "decoration/toilet/toilet_built_custom.prefab");
         RegistryManager.RegisterItem<ToiletCustom>("goldentoilet", "decoration/toilet/goldentoilet_built_custom.prefab");
-
-        RegistryManager.RegisterItem<Object>("dumbell", "decoration/object/dumbell_built.prefab", "decoration/object/dumbell.asset");
     }
 }

@@ -16,5 +16,6 @@ public class ConsolePatches
         Plugin.Logger.LogInfo("[ConsolePatches]: Adding custom commands");
 
         Console.commands.Add("addstore", new TestAddStoreCommand());
+        Console.commands.Add("reloadterrain", new ReloadTerrainCommand());
     }
 }

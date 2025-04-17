@@ -4,7 +4,6 @@ using FishNet.Object;
 
 using UnityEngine.Events;
 
-using ScheduleOne;
 using ScheduleOne.Interaction;
 using ScheduleOne.Storage;
 using UnityEngine;
