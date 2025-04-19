@@ -33,28 +33,20 @@ public static class TerrainManager
         {
             Plugin.Logger.LogInfo($"[TerrainManager]: Processing terrain fragment: {terrainPlacement.TerrainName} at {terrainPlacement.Position}");
 
-            Terrain terrainComponent = null;
-            TerrainCollider terrainColliderComponent = null;
-
             var terrainObject = GameObject.Find($"Map/Container/{terrainPlacement.TerrainName}");
             if (!terrainObject)
-            {
-                // Create the terrain object
-                Plugin.Logger.LogInfo($"[TerrainManager]: Could not find terrain with name: \"Map/Container/{terrainPlacement.TerrainName}\"");
-                terrainObject = new(terrainPlacement.TerrainName)
-                {
-                    transform =
-                    {
-                        position = terrainPlacement.Position,
-                        parent = _mapContainerObject.transform
-                    },
-                };
-                terrainComponent = terrainObject.AddComponent<Terrain>();
-                terrainColliderComponent = terrainObject.AddComponent<TerrainCollider>();
-            }
+                terrainObject = GameObject.Find($"Map/Container/{terrainPlacement.TerrainName}(Clone)");
 
-            terrainComponent ??= terrainObject.GetComponent<Terrain>();
-            terrainColliderComponent ??= terrainObject.GetComponent<TerrainCollider>();
+            // Destroy the terrain object and then recreate it (why not)
+            if (terrainObject)
+                Object.Destroy(terrainObject);
+
+            // Instantiate the terrain object
+            terrainObject = Object.Instantiate(terrainPlacement.GameObject, _mapContainerObject.transform);
+            terrainObject.transform.position = terrainPlacement.Position;
+
+            var terrainComponent = terrainObject.GetComponent<Terrain>();
+            var terrainColliderComponent = terrainObject.GetComponent<TerrainCollider>();
             if (!terrainComponent && !terrainColliderComponent)
             {
                 Plugin.Logger.LogError($"[TerrainManager]: Failed to retrieve Terrain(Collider) component: {terrainComponent} {terrainColliderComponent}");

@@ -17,5 +17,6 @@ public class ConsolePatches
 
         Console.commands.Add("addstore", new TestAddStoreCommand());
         Console.commands.Add("reloadterrain", new ReloadTerrainCommand());
+        Console.commands.Add("freezetime", new FreezeTimeCommand());
     }
 }

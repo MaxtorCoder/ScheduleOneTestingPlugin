@@ -12,19 +12,12 @@
 
     <ItemGroup>
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.5.0-beta.1" PrivateAssets="all" />
-        <PackageReference Include="FishNetV3.CodeGenerator.MSBuild" Version="1.0.0-beta.8" PrivateAssets="all" ExcludeAssets="runtime" />
+        <PackageReference Include="FishNetV3.CodeGenerator.MSBuild" Version="1.0.0-beta.10" PrivateAssets="all" ExcludeAssets="runtime" />
     </ItemGroup>
 
     <ItemGroup>
         <CopyToUnityFolder Include="$(TargetDir)\$(ProjectName).dll" />
+        <CopyToPluginFolder Include="$(TargetDir)\$(ProjectName).dll" />
     </ItemGroup>
-
-    <Target Name="CopyToUnityFolder" AfterTargets="PostBuildEvent" Condition="'$(CI)' == ''" Outputs="$(UnityFolder)">
-        <PropertyGroup>
-            <Destination>$(UnityFolder)\Assets\Plugins\Modding</Destination>
-        </PropertyGroup>
-        <Message Importance="high" Text="Copying files to unity folder: $(Destination)" />
-        <Copy SourceFiles="@(CopyToUnityFolder)" DestinationFiles="@(CopyToUnityFolder->'$(Destination)\%(RecursiveDir)%(Filename)%(Extension)')" />
-    </Target>
 
 </Project>

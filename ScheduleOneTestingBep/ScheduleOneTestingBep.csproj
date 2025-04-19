@@ -44,12 +44,4 @@
     <ItemGroup>
         <CopyToPluginFolder Include="$(TargetDir)\$(ProjectName).dll"/>
     </ItemGroup>
-
-    <Target Name="CopyToPluginFolder" AfterTargets="PostBuildEvent" Condition="'$(CI)' == ''" Outputs="$(PluginFolder)">
-        <PropertyGroup>
-            <Destination>$(PluginFolder)</Destination>
-        </PropertyGroup>
-        <Message Importance="high" Text="Copying files to plugin folder: $(Destination)"/>
-        <Copy SourceFiles="@(CopyToPluginFolder)" DestinationFiles="@(CopyToPluginFolder->'$(Destination)\$(ProjectName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
-    </Target>
 </Project>

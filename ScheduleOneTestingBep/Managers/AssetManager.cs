@@ -16,8 +16,9 @@ namespace ScheduleOneTestingBep.Managers;
 
 public static class AssetManager
 {
-    public static AssetBundle LoadedAssetBundle;
     public static bool IsLoaded;
+
+    static AssetBundle _loadedAssetBundle;
 
     static readonly Dictionary<string, GameObject> _loadedGameObjects = [];
     static readonly Dictionary<string, ScriptableObject> _loadedScriptableObjects = [];
@@ -30,14 +31,14 @@ public static class AssetManager
     /// <param name="forceReload"></param>
     public static void LoadAssetBundle(string assetBundleName, bool forceReload = false)
     {
-        if (LoadedAssetBundle)
+        if (_loadedAssetBundle)
         {
             if (forceReload)
             {
                 Plugin.Logger.LogInfo($"[AssetManager]: Reloading asset bundle {assetBundleName}");
 
-                LoadedAssetBundle.Unload(true);
-                LoadedAssetBundle = null;
+                _loadedAssetBundle.Unload(true);
+                _loadedAssetBundle = null;
             }
             else
             {
@@ -53,7 +54,7 @@ public static class AssetManager
 
         var assetBundle = AssetBundle.LoadFromFile(path);
 #else
-        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ScheduleOneTestingBep.Assets.{assetBundleName}");
+        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ScheduleOneTesting.Assets.{assetBundleName}");
         if (stream == null)
         {
             Plugin.Logger.LogError($"[AssetManager]: Failed to load stream: {assetBundleName}");
@@ -74,7 +75,7 @@ public static class AssetManager
         foreach (var assetName in assetNames)
             Plugin.Logger.LogInfo($"[AssetManager]:     -> Loaded Asset: {assetName}");
 
-        LoadedAssetBundle = assetBundle;
+        _loadedAssetBundle = assetBundle;
     }
 
     /// <summary>
@@ -83,15 +84,15 @@ public static class AssetManager
     /// <param name="networkManager"></param>
     public static void Register(NetworkManager networkManager)
     {
-        if (!LoadedAssetBundle)
+        if (!_loadedAssetBundle)
             return;
 
-        var assetBundleHash = LoadedAssetBundle.Get16BitHash();
+        var assetBundleHash = _loadedAssetBundle.Get16BitHash();
         var netPrefabs = networkManager.GetPrefabObjects<SinglePrefabObjects>(assetBundleHash, createIfMissing: true);
 
-        foreach (var assetName in LoadedAssetBundle.GetAllAssetNames())
+        foreach (var assetName in _loadedAssetBundle.GetAllAssetNames())
         {
-            var gameObject = LoadedAssetBundle.LoadAsset<GameObject>(assetName);
+            var gameObject = _loadedAssetBundle.LoadAsset<GameObject>(assetName);
             if (gameObject && !_loadedGameObjects.ContainsKey(assetName))
             {
                 var terrainComponent = gameObject.GetComponent<Terrain>();
@@ -99,6 +100,7 @@ public static class AssetManager
                 {
                     var terrainPlacement = new TerrainPlacement
                     {
+                        GameObject = gameObject,
                         TerrainName = assetName.Split('/')[^1]
                             .Replace(".prefab", "")
                             .CapitalizeEachWord(),
@@ -126,7 +128,7 @@ public static class AssetManager
                 }
             }
 
-            var scriptableObject = LoadedAssetBundle.LoadAsset<ScriptableObject>(assetName);
+            var scriptableObject = _loadedAssetBundle.LoadAsset<ScriptableObject>(assetName);
             if (scriptableObject && !_loadedScriptableObjects.ContainsKey(assetName))
             {
                 Plugin.Logger.LogInfo($"[AssetManager]:     -> Loaded ScriptableObject {assetName}");
@@ -138,7 +140,7 @@ public static class AssetManager
     }
 
     /// <summary>
-    /// Reloads the <see cref="LoadedAssetBundle"/> instance and register the objects
+    /// Reloads the <see cref="_loadedAssetBundle"/> instance and register the objects
     /// </summary>
     /// <param name="assetBundleName"></param>
     /// <param name="networkManager"></param>

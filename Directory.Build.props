@@ -6,19 +6,27 @@
         <IsPackable>false</IsPackable>
         <Nullable>disable</Nullable>
 
-        <!-- Change this -->
         <ScheduleOneRoot>D:\Games\Steam\steamapps\common\Schedule I - BepInEx</ScheduleOneRoot>
 
         <PluginFolder>$(ScheduleOneRoot)\BepInEx\plugins</PluginFolder>
         <ManagedFolder>$(ScheduleOneRoot)\Schedule I_Data\Managed</ManagedFolder>
 
-        <!-- Change this to unity template project -->
         <UnityFolder>F:\Programming Projects\Unity Projects\ScheduleOne_Modding</UnityFolder>
     </PropertyGroup>
 
-    <ItemGroup>
-        <DepFolders Include="C:\Program Files\Unity\Hub\Editor\2022.3.32f1\Editor\Data\Managed\UnityEngine" />
-        <DepFolders Include="$(ManagedFolder)" />
-        <DepFolders Include="$(ScheduleOneRoot)\BepInEx\core" />
-    </ItemGroup>
+    <Target Name="CopyToPluginFolder" AfterTargets="PostBuildEvent" Condition="'$(CI)' == ''" Outputs="$(PluginFolder)">
+        <PropertyGroup>
+            <Destination>$(PluginFolder)</Destination>
+        </PropertyGroup>
+        <Message Importance="high" Text="Copying files to plugin folder: $(Destination)"/>
+        <Copy SourceFiles="@(CopyToPluginFolder)" DestinationFiles="@(CopyToPluginFolder->'$(Destination)\$(SolutionName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    </Target>
+
+    <Target Name="CopyToUnityFolder" AfterTargets="PostBuildEvent" Condition="'$(CI)' == ''" Outputs="$(UnityFolder)">
+        <PropertyGroup>
+            <Destination>$(UnityFolder)\Assets\Plugins\Modding</Destination>
+        </PropertyGroup>
+        <Message Importance="high" Text="Copying files to unity folder: $(Destination)" />
+        <Copy SourceFiles="@(CopyToUnityFolder)" DestinationFiles="@(CopyToUnityFolder->'$(Destination)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    </Target>
 </Project>
